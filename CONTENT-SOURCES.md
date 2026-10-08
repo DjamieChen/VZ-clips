@@ -11,7 +11,7 @@ Updated October 8, 2026 (Pacific).
 
 | Asset | Original post | Frame |
 | --- | --- | --- |
-| hero-cover.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | Initial video frame |
+| Hero: look-1.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | Finished haircut at 8 seconds |
 | reel-1.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 2 seconds |
 | reel-2.jpg | https://www.instagram.com/p/Db931OzN3VE/ | 4 seconds |
 | reel-3.jpg | https://www.instagram.com/p/DY2W-WhOx9r/ | 12 seconds |
@@ -40,3 +40,5 @@ Images were extracted from the original videos, preserving any text already embe
 The interactions are original CSS/JavaScript implementations inspired by these references. Editorial titles and marketing copy are written for this website. The hero's coordinates refer to Fremont city rather than a private appointment address. No biography, credentials, service tiers, or customer reviews were invented.
 
 Legacy `cut-1.jpg` through `cut-4.png` remain archived assets from the previous Setmore-based version and are no longer displayed.
+
+The opening image now shows the finished haircut. `hero-cover.jpg` is an unused previous opening-frame asset. The haircut wheel has no photo enlargement or controls; scrolling temporarily accelerates its continuous rotation. Reviews continuously rotate and support direct dragging with momentum. Reduced-motion preferences disable automatic motion.

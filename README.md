@@ -5,10 +5,9 @@ An interactive, responsive barber portfolio for Vaughn Zhao in Fremont, Californ
 ## Features
 
 - Staggered word reveals, subtle image motion, and an expanding cursor with reduced-motion support.
-- Draggable, gently rotating haircut wheel featuring eight finished-look frames from six Instagram reels.
-- Full haircut gallery and a keyboard-accessible photo lightbox with original-reel links.
-- Six user-supplied five-star reactions in a rotating review wheel with pause and navigation controls.
-- Actual video-frame covers for the hero and each craft reel, plus the supplied Vaughn portrait.
+- Continuously rotating haircut wheel featuring eight finished-look frames from six Instagram reels. Scrolling accelerates it, then it smoothly settles back to its normal speed. Photos are display-only.
+- Six user-supplied five-star reactions in a continuously rotating review wheel. Grab and drag to spin it, with momentum on release and no visible controls.
+- A finished-haircut frame for the hero and actual video-frame covers and each craft reel, plus the supplied Vaughn portrait.
 - Original Instagram reel embeds loaded only when requested, with original-post fallbacks.
 - Booking buttons throughout the site and a persistent mobile booking bar.
 - Calendly inline calendar and modal integration, enabled by one configuration value.

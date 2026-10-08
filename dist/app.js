@@ -2,9 +2,8 @@
   'use strict';
   const config=window.VZ_CONFIG, $=s=>document.querySelector(s);
   const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
-  const mediaDialog=$('#media-dialog'),bookingDialog=$('#booking-dialog'),galleryDialog=$('#gallery-dialog');
+  const mediaDialog=$('#media-dialog'),bookingDialog=$('#booking-dialog');
   const mediaContent=$('#media-content'),mediaFooter=$('#media-footer'),focusOrigins=new WeakMap();
-  let currentPhoto=0;
   const safeCalendly=value=>{try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='calendly.com'&&u.pathname!=='/'?u:null;}catch{return null;}};
   const calendly=safeCalendly(config.calendlyUrl);
   function openDialog(dialog){focusOrigins.set(dialog,document.activeElement);dialog.showModal();document.body.style.overflow='hidden';}
@@ -14,15 +13,6 @@
     dialog.addEventListener('close',()=>{document.body.style.overflow=document.querySelector('dialog[open]')?'hidden':'';if(dialog===mediaDialog){mediaContent.replaceChildren();mediaFooter.replaceChildren();}if(dialog===bookingDialog)$('#booking-content').replaceChildren();focusOrigins.get(dialog)?.focus({preventScroll:true});});
   });
   function originalLink(id,text){const a=document.createElement('a');a.href=`https://www.instagram.com/p/${encodeURIComponent(id)}/`;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;return a;}
-  function showPhoto(index){
-    currentPhoto=(index+config.gallery.length)%config.gallery.length;const photo=config.gallery[currentPhoto];$('#media-title').textContent=photo.title;
-    const img=document.createElement('img');img.src=photo.image;img.alt=photo.alt;img.className='dialog-photo';mediaContent.replaceChildren(img);
-    const previous=document.createElement('button');previous.textContent='Previous';previous.addEventListener('click',()=>showPhoto(currentPhoto-1));
-    const next=document.createElement('button');next.textContent='Next';next.addEventListener('click',()=>showPhoto(currentPhoto+1));
-    const count=document.createElement('span');count.textContent=`${currentPhoto+1} / ${config.gallery.length}`;count.setAttribute('aria-live','polite');mediaFooter.replaceChildren(previous,count,originalLink(photo.source,'Original reel'),next);
-  }
-  function openPhoto(index){showPhoto(index);openDialog(mediaDialog);}
-  mediaDialog.addEventListener('keydown',e=>{if(!mediaContent.querySelector('.dialog-photo'))return;if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();showPhoto(currentPhoto+(e.key==='ArrowRight'?1:-1));}});
   function openReel(reel){
     $('#media-title').textContent=reel.title;const iframe=document.createElement('iframe');iframe.title=`VZ Clips Instagram reel: ${reel.title}`;iframe.src=`https://www.instagram.com/p/${encodeURIComponent(reel.id)}/embed/`;iframe.allow='autoplay; encrypted-media; fullscreen; picture-in-picture';iframe.allowFullscreen=true;iframe.referrerPolicy='strict-origin-when-cross-origin';
     const help=document.createElement('p');help.className='embed-help';help.append('Instagram may ask you to sign in. ',originalLink(reel.id,'Watch the original on Instagram'));mediaContent.replaceChildren(iframe,help);mediaFooter.replaceChildren();openDialog(mediaDialog);
@@ -34,38 +24,45 @@
     const label=document.createElement('span');label.className='reel-label';const small=document.createElement('small');small.textContent=reel.label;const title=document.createElement('strong');title.textContent=reel.title;label.append(small,title);button.append(poster,play,label);button.addEventListener('click',()=>openReel(reel));$('#reel-grid').append(button);
   });
   $('#hero-play').addEventListener('click',()=>openReel(config.hero));
-  const photoButtons=[];
-  config.gallery.forEach((photo,index)=>{
-    function makeButton(className){const b=document.createElement('button');b.className=className;b.dataset.cursor='VIEW';b.setAttribute('aria-label',`View ${photo.title}`);const img=document.createElement('img');img.src=photo.image;img.alt=photo.alt;img.loading='lazy';img.draggable=false;const title=document.createElement('span');title.textContent=photo.title;b.append(img,title);return b;}
-    const orbit=makeButton('orbit-card');orbit.addEventListener('click',()=>{if(!cutWheel.wasDragged())openPhoto(index);});$('#cut-ring').append(orbit);photoButtons.push(orbit);
-    const grid=makeButton('all-cut');grid.addEventListener('click',()=>openPhoto(index));$('#all-cuts').append(grid);
+  const photoCards=config.gallery.map(photo=>{
+    const card=document.createElement('figure');card.className='orbit-card';
+    const img=document.createElement('img');img.src=photo.image;img.alt=photo.alt;img.loading='lazy';img.draggable=false;
+    const title=document.createElement('span');title.textContent=photo.title;card.append(img,title);$('#cut-ring').append(card);return card;
   });
-  $('#view-all').addEventListener('click',()=>openDialog(galleryDialog));
-  // Responsive elliptical orbits retain readable cards with a sense of depth.
-  function makeWheel({surface,cards,previous,next,pause,review=false}){
-    let angle=0,target=0,width=surface.clientWidth,height=surface.clientHeight,visible=false,hover=false,focused=false;
-    let paused=reducedMotion.matches,dragging=false,dragged=false,startX=0,lastX=0,dragStart=0,velocity=0,frame=0,lastTime=0;
+  function makeWheel({surface,cards,review=false}){
+    let angle=0,width=surface.clientWidth,height=surface.clientHeight,visible=false,frame=0,lastTime=0;
+    let dragging=false,pointerId=null,lastX=0,lastPointerTime=0,velocity=0,scrollBoost=0,lastScroll=scrollY;
     const step=Math.PI*2/cards.length;
-    function updatePause(){pause.textContent=paused?'Play':'Pause';pause.setAttribute('aria-pressed',String(paused));pause.setAttribute('aria-label',`${paused?'Resume':'Pause'} ${review?'review':'haircut'} rotation`);}
-    function render(){cards.forEach((card,index)=>{const phase=angle+index*step+Math.PI/2,depth=(Math.sin(phase)+1)/2;const x=Math.cos(phase)*width*.35,y=Math.sin(phase)*height*(review ? .28 : .29);const scale=review ? .7+depth*.3 : .55+depth*.45,tilt=Math.cos(phase)*(review?12:18);card.style.transform=`translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(${scale})`;card.style.opacity=String(review ? .25+depth*.75 : .45+depth*.55);card.style.zIndex=String(Math.round(depth*100));});}
-    function animate(time){frame=0;const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;if(!dragging){if(Math.abs(target-angle)>.0001)angle+=(target-angle)*(1-Math.exp(-dt*7));else if(velocity){angle+=velocity*dt;target=angle;velocity*=Math.exp(-dt*5);if(Math.abs(velocity)<.002)velocity=0;}else if(!paused&&!hover&&!focused&&!document.querySelector('dialog[open]')){angle+=dt*(review ? .13 : .1);target=angle;}}render();if(visible&&!document.hidden)frame=requestAnimationFrame(animate);}
-    function start(){if(!frame&&visible&&!document.hidden){lastTime=0;frame=requestAnimationFrame(animate);}}
+    function render(){cards.forEach((card,index)=>{
+      const phase=angle+index*step+Math.PI/2,depth=(Math.sin(phase)+1)/2;
+      const x=Math.cos(phase)*width*.35,y=Math.sin(phase)*height*(review?.28:.29);
+      const scale=review?.7+depth*.3:.55+depth*.45,tilt=Math.cos(phase)*(review?12:18);
+      card.style.transform=`translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(${scale})`;
+      card.style.opacity=String(review?.25+depth*.75:.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
+    });}
+    function animate(time){
+      frame=0;const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;
+      if(!dragging&&!reducedMotion.matches){angle+=dt*((review?.18:.16)+velocity+scrollBoost);velocity*=Math.exp(-dt*3);scrollBoost*=Math.exp(-dt*2.3);}
+      render();if(visible&&!document.hidden&&!reducedMotion.matches)frame=requestAnimationFrame(animate);
+    }
+    function start(){if(!frame&&visible&&!document.hidden&&!reducedMotion.matches){lastTime=0;frame=requestAnimationFrame(animate);}}
     function stop(){cancelAnimationFrame(frame);frame=0;lastTime=0;}
-    function move(direction){paused=true;updatePause();velocity=0;target+=direction*step;if(reducedMotion.matches){angle=target;render();}start();if(review){const i=((Math.round(-target/step)%cards.length)+cards.length)%cards.length;$('#review-announcement').textContent=`${config.reviews[i].quote}. ${config.reviews[i].name}. Five stars.`;}}
-    previous.addEventListener('click',()=>move(1));next.addEventListener('click',()=>move(-1));pause.addEventListener('click',()=>{paused=!paused;updatePause();velocity=0;start();});
-    surface.addEventListener('pointerenter',e=>{if(e.pointerType!=='touch')hover=true;});surface.addEventListener('pointerleave',()=>hover=false);surface.addEventListener('focusin',()=>focused=true);surface.addEventListener('focusout',e=>focused=surface.contains(e.relatedTarget));
-    if(!review){surface.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();move(e.key==='ArrowRight'?-1:1);}});
-      surface.addEventListener('pointerdown',e=>{if(e.button!==0)return;dragging=true;dragged=false;startX=lastX=e.clientX;dragStart=angle;velocity=0;surface.classList.add('dragging');});
-      window.addEventListener('pointermove',e=>{if(!dragging)return;const dx=e.clientX-startX;if(Math.abs(dx)>7){dragged=true;surface.setPointerCapture(e.pointerId);}angle=dragStart+dx*.008;target=angle;velocity=(e.clientX-lastX)*.12;lastX=e.clientX;render();});
-      const endDrag=()=>{if(!dragging)return;dragging=false;surface.classList.remove('dragging');if(dragged){paused=true;updatePause();if(reducedMotion.matches)velocity=0;}start();};window.addEventListener('pointerup',endDrag);window.addEventListener('pointercancel',endDrag);
+    if(!review)window.addEventListener('scroll',()=>{const distance=Math.abs(scrollY-lastScroll);lastScroll=scrollY;if(visible&&!reducedMotion.matches){scrollBoost=Math.min(3,scrollBoost+distance*.006);start();}},{passive:true});
+    if(review){
+      surface.addEventListener('pointerdown',e=>{if(e.button!==0||pointerId!==null)return;pointerId=e.pointerId;dragging=true;lastX=e.clientX;lastPointerTime=e.timeStamp;velocity=0;surface.setPointerCapture(e.pointerId);surface.classList.add('dragging');});
+      surface.addEventListener('pointermove',e=>{if(e.pointerId!==pointerId)return;const dx=e.clientX-lastX,seconds=Math.max((e.timeStamp-lastPointerTime)/1000,.008);angle+=dx*.008;velocity=Math.max(-5,Math.min(5,dx*.008/seconds));lastX=e.clientX;lastPointerTime=e.timeStamp;render();});
+      const release=e=>{if(e.pointerId!==pointerId)return;dragging=false;pointerId=null;surface.classList.remove('dragging');if(surface.hasPointerCapture(e.pointerId))surface.releasePointerCapture(e.pointerId);if(reducedMotion.matches)velocity=0;start();};
+      surface.addEventListener('pointerup',release);surface.addEventListener('pointercancel',release);surface.addEventListener('lostpointercapture',e=>{if(e.pointerId===pointerId)release(e);});
+      surface.addEventListener('keydown',e=>{if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();angle+=(e.key==='ArrowRight'?-1:1)*step;render();}});
     }
     new ResizeObserver(()=>{width=surface.clientWidth;height=surface.clientHeight;render();}).observe(surface);
-    new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;if(visible)start();else stop();},{threshold:.05}).observe(surface);
-    document.addEventListener('visibilitychange',()=>{if(document.hidden)stop();else start();});reducedMotion.addEventListener('change',()=>{paused=reducedMotion.matches;velocity=0;updatePause();render();});updatePause();render();return{wasDragged:()=>dragged};
+    new IntersectionObserver(entries=>{visible=entries[0].isIntersecting;visible?start():stop();},{threshold:.05}).observe(surface);
+    document.addEventListener('visibilitychange',()=>document.hidden?stop():start());
+    reducedMotion.addEventListener('change',()=>{velocity=scrollBoost=0;reducedMotion.matches?stop():start();render();});render();
   }
-  const cutWheel=makeWheel({surface:$('#cut-orbit'),cards:photoButtons,previous:$('#cuts-prev'),next:$('#cuts-next'),pause:$('#cuts-pause')});
+  makeWheel({surface:$('#cut-orbit'),cards:photoCards});
   const reviewCards=config.reviews.map(review=>{const f=document.createElement('figure');f.className='review-card';const stars=document.createElement('div');stars.className='stars';stars.textContent='★★★★★';stars.setAttribute('aria-label','5 out of 5 stars');const q=document.createElement('blockquote');q.textContent=`“${review.quote}”`;const c=document.createElement('figcaption');c.textContent=review.name;f.append(stars,q,c);$('#review-ring').append(f);return f;});
-  makeWheel({surface:$('#review-wheel'),cards:reviewCards,previous:$('#reviews-prev'),next:$('#reviews-next'),pause:$('#reviews-pause'),review:true});
+  makeWheel({surface:$('#review-wheel'),cards:reviewCards,review:true});
   function makeCalendar(title){const url=new URL(calendly);url.searchParams.set('embed_type','Inline');url.searchParams.set('embed_domain',location.hostname);url.searchParams.set('hide_gdpr_banner','0');url.searchParams.set('primary_color','4a5b31');const iframe=document.createElement('iframe');iframe.title=title;iframe.src=url.href;iframe.loading='lazy';iframe.referrerPolicy='strict-origin-when-cross-origin';return iframe;}
   if(calendly){const inline=$('#calendar-inline'),load=document.createElement('button');load.className='button';load.textContent='View available times here';load.addEventListener('click',()=>inline.replaceChildren(makeCalendar('Book a VZ Clips haircut with Calendly')));inline.append(load);}
   function openBooking(){const content=$('#booking-content');content.replaceChildren();if(calendly)content.append(makeCalendar('Choose your VZ Clips appointment on Calendly'));else{
