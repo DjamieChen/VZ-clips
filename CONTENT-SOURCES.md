@@ -42,3 +42,4 @@ The interactions are original CSS/JavaScript implementations inspired by these r
 Legacy `cut-1.jpg` through `cut-4.png` remain archived assets from the previous Setmore-based version and are no longer displayed.
 
 The opening image now shows the finished haircut. `hero-cover.jpg` is an unused previous opening-frame asset. The haircut wheel has no photo enlargement or controls; scrolling temporarily accelerates its continuous rotation. Reviews continuously rotate and support direct dragging with momentum. Reduced-motion preferences disable automatic motion.
+`craft-finishing.png` and `craft-personality.png` are user-supplied replacement craft covers, copied unchanged. Both haircut and review wheels support dragging with momentum, alongside their continuous rotation.

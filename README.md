@@ -5,7 +5,7 @@ An interactive, responsive barber portfolio for Vaughn Zhao in Fremont, Californ
 ## Features
 
 - Staggered word reveals, subtle image motion, and an expanding cursor with reduced-motion support.
-- Continuously rotating haircut wheel featuring eight finished-look frames from six Instagram reels. Scrolling accelerates it, then it smoothly settles back to its normal speed. Photos are display-only.
+- Continuously rotating haircut wheel featuring eight finished-look frames from six Instagram reels. Scrolling accelerates it, then it smoothly settles back to its normal speed. Grab and drag to spin it with momentum. Photos remain display-only.
 - Six user-supplied five-star reactions in a continuously rotating review wheel. Grab and drag to spin it, with momentum on release and no visible controls.
 - A finished-haircut frame for the hero and actual video-frame covers and each craft reel, plus the supplied Vaughn portrait.
 - Original Instagram reel embeds loaded only when requested, with original-post fallbacks.
@@ -32,3 +32,4 @@ Business details and pricing are in `dist/index.html`. The hero, reels, gallery,
 See `CONTENT-SOURCES.md`. Instagram may require login or restrict embeds depending on visitor cookies, post privacy, and provider availability. Each reel includes an original-post link. Covers and gallery images are extracted frames stored locally, avoiding expiring CDN URLs. There is no automatic Instagram synchronization; edit the configuration to change featured posts. The six review quotes and their five-star ratings were supplied by the user; no additional reviews were invented. Pricing is a snapshot of the booking page and should be reconfirmed before public launch.
 
 The first hosted Site is private for owner review. GitHub repository publication is separate from Sites hosting and requires an authenticated GitHub account.
+

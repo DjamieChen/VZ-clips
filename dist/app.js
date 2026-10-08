@@ -48,7 +48,7 @@
     function start(){if(!frame&&visible&&!document.hidden&&!reducedMotion.matches){lastTime=0;frame=requestAnimationFrame(animate);}}
     function stop(){cancelAnimationFrame(frame);frame=0;lastTime=0;}
     if(!review)window.addEventListener('scroll',()=>{const distance=Math.abs(scrollY-lastScroll);lastScroll=scrollY;if(visible&&!reducedMotion.matches){scrollBoost=Math.min(3,scrollBoost+distance*.006);start();}},{passive:true});
-    if(review){
+    {
       surface.addEventListener('pointerdown',e=>{if(e.button!==0||pointerId!==null)return;pointerId=e.pointerId;dragging=true;lastX=e.clientX;lastPointerTime=e.timeStamp;velocity=0;surface.setPointerCapture(e.pointerId);surface.classList.add('dragging');});
       surface.addEventListener('pointermove',e=>{if(e.pointerId!==pointerId)return;const dx=e.clientX-lastX,seconds=Math.max((e.timeStamp-lastPointerTime)/1000,.008);angle+=dx*.008;velocity=Math.max(-5,Math.min(5,dx*.008/seconds));lastX=e.clientX;lastPointerTime=e.timeStamp;render();});
       const release=e=>{if(e.pointerId!==pointerId)return;dragging=false;pointerId=null;surface.classList.remove('dragging');if(surface.hasPointerCapture(e.pointerId))surface.releasePointerCapture(e.pointerId);if(reducedMotion.matches)velocity=0;start();};
@@ -82,5 +82,6 @@
   document.addEventListener('pointerleave',()=>cursor.classList.remove('shown'));document.addEventListener('focusin',()=>cursor.classList.remove('shown'));
   const resetCursor=()=>{if(!finePointer.matches||reducedMotion.matches){document.body.classList.remove('cursor-ready');cursor.classList.remove('shown');cancelAnimationFrame(cursorFrame);cursorFrame=0;}};finePointer.addEventListener('change',resetCursor);reducedMotion.addEventListener('change',resetCursor);
 })();
+
 
 

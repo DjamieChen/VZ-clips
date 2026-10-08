@@ -24,3 +24,4 @@
 @media(hover:none),(pointer:coarse){.custom-cursor{display:none}}
 /* Continuous motion, with direct dragging only on the review wheel. */
 .orbit-card{margin:0;pointer-events:none}.cut-orbit{cursor:default;touch-action:pan-y}.orbit-card:hover{border-color:#ffffff30}.review-wheel{cursor:grab;touch-action:pan-y;user-select:none}.review-wheel.dragging{cursor:grabbing}.reviews>.review-note{display:block;text-align:center;margin-top:12px;font-size:.875rem;letter-spacing:0}.hero-image-label{justify-content:flex-start}
+.wordmark span{color:#fff}.cut-orbit{cursor:grab}.cut-orbit.dragging{cursor:grabbing}
