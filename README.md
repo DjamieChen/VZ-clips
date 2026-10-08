@@ -4,13 +4,16 @@ An interactive, responsive barber portfolio for Vaughn Zhao in Fremont, Californ
 
 ## Features
 
-- Scroll reveals and subtle image motion with reduced-motion support.
-- Four selectable haircut styles and a keyboard-accessible photo lightbox.
+- Staggered word reveals, subtle image motion, and an expanding cursor with reduced-motion support.
+- Draggable, gently rotating haircut wheel featuring eight finished-look frames from six Instagram reels.
+- Full haircut gallery and a keyboard-accessible photo lightbox with original-reel links.
+- Six user-supplied five-star reactions in a rotating review wheel with pause and navigation controls.
+- Actual video-frame covers for the hero and each craft reel, plus the supplied Vaughn portrait.
 - Original Instagram reel embeds loaded only when requested, with original-post fallbacks.
 - Booking buttons throughout the site and a persistent mobile booking bar.
 - Calendly inline calendar and modal integration, enabled by one configuration value.
 - Real Setmore appointment booking while Calendly is unconfigured.
-- Public business contact details, actual client reviews, and booking FAQs.
+- Public business contact details and booking FAQs.
 - No build tool, dependency installation, database, or API key required.
 
 ## Run locally
@@ -23,11 +26,10 @@ Edit `dist/config.js` and set `calendlyUrl` to Vaughn's exact HTTPS event URL, f
 
 ## Update content
 
-Business details and pricing are in `dist/index.html`. Haircut descriptions and interactive behavior are in `dist/app.js`. The reel list is in `dist/config.js`. Styling is in `dist/styles.css`. Local portfolio assets are in `dist/assets/`.
+Business details and pricing are in `dist/index.html`. The hero, reels, gallery, and supplied review list are in `dist/config.js`. Interactive behavior is in `dist/app.js` and styling is in `dist/styles.css`. Local portfolio assets are in `dist/assets/`.
 
 ## Sources and limitations
 
-See `CONTENT-SOURCES.md`. Instagram may require login or restrict embeds depending on visitor cookies, post privacy, and provider availability. Each reel includes an original-post link. Reel cover images currently use VZ Clips' Setmore portfolio imagery rather than guaranteed exact frames from each reel. There is no automatic Instagram synchronization; edit the reel list to change featured posts. Review count and price are snapshots from the existing booking page and should be reconfirmed before public launch.
+See `CONTENT-SOURCES.md`. Instagram may require login or restrict embeds depending on visitor cookies, post privacy, and provider availability. Each reel includes an original-post link. Covers and gallery images are extracted frames stored locally, avoiding expiring CDN URLs. There is no automatic Instagram synchronization; edit the configuration to change featured posts. The six review quotes and their five-star ratings were supplied by the user; no additional reviews were invented. Pricing is a snapshot of the booking page and should be reconfirmed before public launch.
 
 The first hosted Site is private for owner review. GitHub repository publication is separate from Sites hosting and requires an authenticated GitHub account.
-

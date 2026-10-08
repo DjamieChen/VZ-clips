@@ -1,24 +1,42 @@
 # Content provenance
 
-Reviewed October 7, 2026 (Pacific).
+Updated October 8, 2026 (Pacific).
 
-- https://www.instagram.com/vz.clipz/ — Vaughn Zhao, Fremont barber; reel identifiers taken from publicly visible profile links.
-- https://vzclipz.setmore.com/ — Men's Haircut, $35, 1 hour; Vaughn Zhao; Fremont, California; text for exact address; (510) 283-7897; vzclipz08@gmail.com; TikTok @vz.clipzz; 5.0 rating from 6 reviews.
-- https://vzclipz.setmore.com/reviews?sortBy=highestRated — three brief review quotes with original attribution.
-- Portfolio photos sourced from image elements rendered on the supplied Setmore page. Images remain local to avoid expiring Instagram CDN links.
+- Instagram profile: https://www.instagram.com/vz.clipz/ — Vaughn Zhao, Fremont barber; post ownership and identifiers verified on publicly rendered Instagram pages.
+- Existing booking site: https://vzclipz.setmore.com/ — Men's Haircut, $35, 1 hour; Fremont, California; text for exact address; (510) 283-7897; vzclipz08@gmail.com; TikTok @vz.clipzz. These business details were reviewed October 7, 2026.
+- `vaughn.png`: user-supplied portrait, copied unchanged from attachment `1779738631383.png`. The textual green VZ. clips wordmark is separate from the portrait.
+- Reviews: six quotes, names, and five-star ratings supplied directly by the user on October 8. They are not attributed to Setmore. No reviews were generated or counts advertised.
 
-Photo sources:
+## Actual reel-frame covers
 
-1. https://images.setmore.com/files/img/f8Yjk3qE014s/42b63137-c395-46c6-96cf-e544edb8966b.jpeg
-2. https://images.setmore.com/files/img/f0B2nNaXA5PB/7b396483-3b03-4441-848f-bf1a3b0e76f9.jpeg
-3. https://images.setmore.com/files/img/fHot8FU9CFyT/6b52f1fb-79d4-4736-9382-f051105f5569.png
-4. https://images.setmore.com/files/img/fvueqTVpP228/e5c1cd35-ed9e-46ac-ba84-69cc833a21bb.png
+| Asset | Original post | Frame |
+| --- | --- | --- |
+| hero-cover.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | Initial video frame |
+| reel-1.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 2 seconds |
+| reel-2.jpg | https://www.instagram.com/p/Db931OzN3VE/ | 4 seconds |
+| reel-3.jpg | https://www.instagram.com/p/DY2W-WhOx9r/ | 12 seconds |
 
-Featured original reels:
+## Finished-look gallery
 
-- https://www.instagram.com/vz.clipz/reel/Dbrm_uVhykY/
-- https://www.instagram.com/vz.clipz/reel/Db931OzN3VE/
-- https://www.instagram.com/vz.clipz/reel/DbYp74sslbP/
+| Asset | Original post | Frame |
+| --- | --- | --- |
+| look-1.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | 8 seconds |
+| look-2.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 6 seconds |
+| look-3.jpg | https://www.instagram.com/p/Db931OzN3VE/ | 6 seconds |
+| look-4.jpg | https://www.instagram.com/p/DY2W-WhOx9r/ | 14 seconds |
+| look-5.jpg | https://www.instagram.com/p/Dd7aQjwvwFD/ | 4 seconds |
+| look-6.jpg | https://www.instagram.com/p/Ddpjs9NTn2V/ | Initial frame |
+| look-7.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 11.2 seconds |
+| look-8.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | 11.2 seconds |
 
-Marketing headlines, editorial reel labels, and style descriptions are new copy written for this website. Style names describe the visible portfolio photos and are not additional booked services. The hero's coordinates identify Fremont city, not the private appointment address. No biography, credentials, policies, service tiers, or customer reviews were invented.
+Images were extracted from the original videos, preserving any text already embedded in those videos. No faces or haircut results were generated or retouched. Original media was acquired from assets observed on the rendered post pages. The site stores only still frames and uses Instagram embeds for video playback, with direct post links as a fallback.
 
+## Design references
+
+- https://visuvate.com/ — circular, floating portfolio presentation.
+- https://www.arunnm.com/case-study.html — smooth circular cursor that grows on interactive targets.
+- https://www.olympic.no/ — staggered, masked text entrances.
+
+The interactions are original CSS/JavaScript implementations inspired by these references. Editorial titles and marketing copy are written for this website. The hero's coordinates refer to Fremont city rather than a private appointment address. No biography, credentials, service tiers, or customer reviews were invented.
+
+Legacy `cut-1.jpg` through `cut-4.png` remain archived assets from the previous Setmore-based version and are no longer displayed.
