@@ -1,1 +1,15 @@
-{"name":"vz-clips","version":"1.0.0","private":true,"type":"module","description":"Interactive portfolio and appointment booking for VZ Clips","scripts":{"dev":"node server.mjs","check":"node --check dist/app.js && node --check dist/config.js && node verify.mjs"},"engines":{"node":">=18"}}
+{
+  "name": "vz-clips",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Interactive portfolio and appointment booking for VZ Clips",
+  "scripts": {
+    "dev": "node build.mjs && node server.mjs",
+    "check": "node build.mjs && node --check dist/app.js && node --check dist/config.js && node verify.mjs",
+    "build": "node build.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

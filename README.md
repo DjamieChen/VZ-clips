@@ -1,35 +1,36 @@
 # VZ Clips
 
-An interactive, responsive barber portfolio for Vaughn Zhao in Fremont, California. Inspired by Apple's restrained typography, generous spacing, and scroll-driven presentation, with its own VZ Clips identity.
+## [Open the live website →](https://djamiechen.github.io/VZ-clips/)
 
-## Features
+The full interactive website is hosted on GitHub Pages. Visitors can browse the haircuts, watch the reels, and book an appointment directly from that link.
 
-- Staggered word reveals, subtle image motion, and an expanding cursor with reduced-motion support.
-- Continuously rotating haircut wheel featuring eight finished-look frames from six Instagram reels. Scrolling accelerates it, then it smoothly settles back to its normal speed. Grab and drag to spin it with momentum. Photos remain display-only.
-- Six user-supplied five-star reactions in a continuously rotating review wheel. Grab and drag to spin it, with momentum on release and no visible controls.
-- A finished-haircut frame for the hero and actual video-frame covers and each craft reel, plus the supplied Vaughn portrait.
-- Original Instagram reel embeds loaded only when requested, with original-post fallbacks.
-- Booking buttons throughout the site and a persistent mobile booking bar.
-- Calendly inline calendar and modal integration, enabled by one configuration value.
-- Real Setmore appointment booking while Calendly is unconfigured.
-- Public business contact details and booking FAQs.
-- No build tool, dependency installation, database, or API key required.
+## Edit the website text
 
-## Run locally
+Open a file below, press the pencil icon, edit the text, and **Commit changes** to main. GitHub automatically builds and publishes your changes. Allow a few minutes, then refresh the live website.
 
-Requires Node 18 or newer. Run `node server.mjs`, then open http://127.0.0.1:4173. Run `node --check dist/app.js`, `node --check dist/config.js`, and `node verify.mjs` for basic verification. All deployable files are in `dist/` and work on any static host.
+| Section | Headings and text | Images, video titles, or repeated content |
+| --- | --- | --- |
+| Logo and navigation | [header.html](sections/header.html) |  |
+| Opening / good hairday | [hero.html](sections/hero.html) | [hero.json](sections/hero.json) |
+| Moving text strip | [ticker.html](sections/ticker.html) |  |
+| Every angle / haircut wheel | [cuts.html](sections/cuts.html) | [cuts.json](sections/cuts.json) |
+| See the craft | [craft.html](sections/craft.html) | [craft.json](sections/craft.json) |
+| Meet Vaughn | [meet-vaughn.html](sections/meet-vaughn.html) |  |
+| Word from the chair | [reviews.html](sections/reviews.html) | [reviews.json](sections/reviews.json) |
+| Booking, price, and contact | [booking.html](sections/booking.html) | [booking.json](sections/booking.json) |
+| Questions and answers | [faq.html](sections/faq.html) |  |
+| Bottom of the page | [footer.html](sections/footer.html) |  |
 
-## Connect Calendly
+In HTML files, change the words between the tags. Keep IDs, classes, and tags so the design and motion continue working. In JSON files, change values inside quotation marks and keep commas and brackets. If you change the haircut price, also update the FAQ and mobile booking bar in [page.html](page.html).
 
-Edit `dist/config.js` and set `calendlyUrl` to Vaughn's exact HTTPS event URL, for example the URL copied from Calendly's Share control. Do not use a guessed account or event URL. Once configured, every booking button opens Calendly, and the booking section offers an inline calendar. Visitors must complete the provider's confirmation flow; the website never fabricates times or confirmations. Until the event URL is supplied, Setmore remains active.
+To connect Calendly, paste Vaughn's actual event link into calendlyUrl in [booking.json](sections/booking.json). Setmore works until that link is added.
 
-## Update content
+## Publishing
 
-Business details and pricing are in `dist/index.html`. The hero, reels, gallery, and supplied review list are in `dist/config.js`. Interactive behavior is in `dist/app.js` and styling is in `dist/styles.css`. Local portfolio assets are in `dist/assets/`.
+[View publishing progress](https://github.com/DjamieChen/VZ-clips/actions/workflows/pages.yml). Each change on main runs asset and content checks before publishing dist/ through GitHub Pages. A failed check leaves the previous successful version live.
 
-## Sources and limitations
+The sections/ folder contains the editable source. page.html combines the sections. dist/index.html and dist/config.js are generated, so edit the section files instead. Design styles are in dist/styles.css, motion and interaction code is in dist/app.js, and images are in dist/assets/.
 
-See `CONTENT-SOURCES.md`. Instagram may require login or restrict embeds depending on visitor cookies, post privacy, and provider availability. Each reel includes an original-post link. Covers and gallery images are extracted frames stored locally, avoiding expiring CDN URLs. There is no automatic Instagram synchronization; edit the configuration to change featured posts. The six review quotes and their five-star ratings were supplied by the user; no additional reviews were invented. Pricing is a snapshot of the booking page and should be reconfirmed before public launch.
+For optional local development, use Node 18 or newer: npm run dev. Use npm run check to build and verify. No dependency installation is required.
 
-The first hosted Site is private for owner review. GitHub repository publication is separate from Sites hosting and requires an authenticated GitHub account.
-
+See [CONTENT-SOURCES.md](CONTENT-SOURCES.md) for media sources and booking information. Instagram embeds depend on Instagram availability and have links to the original posts.
