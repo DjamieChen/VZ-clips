@@ -1,20 +1,12 @@
-# Content provenance
+# Content 
 
-Updated October 8, 2026 (Pacific).
-
-- Instagram profile: https://www.instagram.com/vz.clipz/ — Vaughn Zhao, Fremont barber; post ownership and identifiers verified on publicly rendered Instagram pages.
-- Existing booking site: https://vzclipz.setmore.com/ — Men's Haircut, $35, 1 hour; Fremont, California; text for exact address; (510) 283-7897; vzclipz08@gmail.com; TikTok @vz.clipzz. These business details were reviewed October 7, 2026.
-- `vaughn.png`: user-supplied portrait, copied unchanged from attachment `1779738631383.png`. The textual green VZ. clips wordmark is separate from the portrait.
-- Reviews: six quotes, names, and five-star ratings supplied directly by the user on October 8. They are not attributed to Setmore. No reviews were generated or counts advertised.
-
-## Actual reel-frame covers
 
 | Asset | Original post | Frame |
 | --- | --- | --- |
-| Hero: look-1.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | Finished haircut at 8 seconds |
-| reel-1.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 2 seconds |
-| reel-2.jpg | https://www.instagram.com/p/Db931OzN3VE/ | 4 seconds |
-| reel-3.jpg | https://www.instagram.com/p/DY2W-WhOx9r/ | 12 seconds |
+| 1.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | Finished haircut at 8 seconds |
+| 2.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 2 seconds |
+| 4.jpg | https://www.instagram.com/p/Db931OzN3VE/ | 4 seconds |
+| 3.jpg | https://www.instagram.com/p/DY2W-WhOx9r/ | 12 seconds |
 
 ## Finished-look gallery
 
@@ -29,17 +21,8 @@ Updated October 8, 2026 (Pacific).
 | look-7.jpg | https://www.instagram.com/p/Dbrm_uVhykY/ | 11.2 seconds |
 | look-8.jpg | https://www.instagram.com/p/DeK1SZVB-_p/ | 11.2 seconds |
 
-Images were extracted from the original videos, preserving any text already embedded in those videos. No faces or haircut results were generated or retouched. Original media was acquired from assets observed on the rendered post pages. The site stores only still frames and uses Instagram embeds for video playback, with direct post links as a fallback.
-
-## Design references
-
 - https://visuvate.com/ — circular, floating portfolio presentation.
 - https://www.arunnm.com/case-study.html — smooth circular cursor that grows on interactive targets.
 - https://www.olympic.no/ — staggered, masked text entrances.
 
-The interactions are original CSS/JavaScript implementations inspired by these references. Editorial titles and marketing copy are written for this website. The hero's coordinates refer to Fremont city rather than a private appointment address. No biography, credentials, service tiers, or customer reviews were invented.
 
-Legacy `cut-1.jpg` through `cut-4.png` remain archived assets from the previous Setmore-based version and are no longer displayed.
-
-The opening image now shows the finished haircut. `hero-cover.jpg` is an unused previous opening-frame asset. The haircut wheel has no photo enlargement or controls; scrolling temporarily accelerates its continuous rotation. Reviews continuously rotate and support direct dragging with momentum. Reduced-motion preferences disable automatic motion.
-`craft-finishing.png` and `craft-personality.png` are user-supplied replacement craft covers, copied unchanged. Both haircut and review wheels support dragging with momentum, alongside their continuous rotation.
