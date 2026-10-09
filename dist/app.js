@@ -38,7 +38,7 @@
     function measureScroll(){
       const headerHeight=$('.header').offsetHeight;
       if(!stage)return;
-      const distance=innerHeight*turns*.7;
+      const distance=innerHeight*turns*.455;
       section.style.height=reducedMotion.matches?'auto':(stage.offsetHeight+distance)+'px';
       sectionTop=section.getBoundingClientRect().top+scrollY-headerHeight;
       scrollDistance=distance;
@@ -81,7 +81,8 @@
         }
       }
       surface.dataset.scrollTurns=String(scrollAngle/(Math.PI*2));
-      const x=Math.cos(phase)*width*.35,y=Math.sin(phase)*height*(review?.28:.29);
+      const phone=width<500;
+      const x=Math.cos(phase)*width*(phone?.31:.35),y=Math.sin(phase)*height*(phone?.33:(review?.28:.29));
       const scale=review?.7+depth*.3:.55+depth*.45,tilt=Math.cos(phase)*(review?12:18);
       card.style.transform=`translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(${scale})`;
       card.style.opacity=String(review?.25+depth*.75:.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
