@@ -2,7 +2,7 @@ import {readFile,access} from 'node:fs/promises';
 import vm from 'node:vm';
 const html=await readFile('dist/index.html','utf8');
 const refs=[...html.matchAll(/(?:src|href)="([^"#]+)"/g)].map(x=>x[1]).filter(x=>!x.includes(':'));
-for(const ref of new Set(refs))await access('dist/'+ref);
+for(const ref of new Set(refs))await access('dist/'+ref.split('?')[0]);
 const ids=new Set([...html.matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]));
 for(const target of [...html.matchAll(/href="#([^"]+)"/g)].map(x=>x[1]))if(!ids.has(target))throw Error('Missing navigation destination '+target);
 const context={window:{}};vm.runInNewContext(await readFile('dist/config.js','utf8'),context);const config=context.window.VZ_CONFIG;
