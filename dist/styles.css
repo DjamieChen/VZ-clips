@@ -67,3 +67,10 @@
 .reviews>.review-note{margin-top:12px}
 @media(max-width:1000px){.section.reviews{padding:80px 5% 60px}.reviews .review-wheel{height:510px}.reviews .review-card{width:280px}}
 @media(max-width:700px){.section.reviews{padding:65px 6% 50px}.reviews .review-wheel{height:530px;margin-inline:-6.4%;width:112.8%}.reviews .review-card{width:240px;min-height:170px}}
+
+/* Compact cursor: matching triangle/circle geometry, with a transparent hover ring. */
+.custom-cursor{width:20px;height:20px;background:transparent;transition:width .32s cubic-bezier(.34,1.56,.64,1),height .32s cubic-bezier(.34,1.56,.64,1),opacity .2s}
+.custom-cursor:before{box-sizing:border-box;clip-path:polygon(0% 0%,12.5% 6.2%,25% 12.5%,37.5% 18.8%,50% 25%,62.5% 31.2%,75% 37.5%,87.5% 43.8%,100% 50%,87.5% 56.2%,75% 62.5%,62.5% 68.8%,50% 75%,37.5% 81.2%,25% 87.5%,12.5% 93.8%,0% 100%,0% 87.5%,0% 75%,0% 62.5%,0% 50%,0% 37.5%,0% 25%,0% 12.5%);background:var(--accent);border:0;border-radius:0;transform:rotate(var(--cursor-angle,0rad)) scale(var(--cursor-stretch-x,1),var(--cursor-stretch-y,1));transition:clip-path .28s cubic-bezier(.22,1,.36,1),background .2s,border-radius .28s}
+.custom-cursor.expanded{width:46px;height:46px;background:transparent}
+.custom-cursor.expanded:before{clip-path:polygon(14.6% 14.6%,25% 6.7%,37.1% 1.7%,50% 0%,62.9% 1.7%,75% 6.7%,85.4% 14.6%,93.3% 25%,98.3% 37.1%,100% 50%,98.3% 62.9%,93.3% 75%,85.4% 85.4%,75% 93.3%,62.9% 98.3%,50% 100%,37.1% 98.3%,25% 93.3%,14.6% 85.4%,6.7% 75%,1.7% 62.9%,0% 50%,1.7% 37.1%,6.7% 25%);border-radius:50%;background:#c5ed8814;border:1.5px solid #c5ed88d9}
+.custom-cursor span{display:none}

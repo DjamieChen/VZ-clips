@@ -38,7 +38,7 @@
     function measureScroll(){
       const headerHeight=$('.header').offsetHeight;
       if(!stage)return;
-      const distance=innerHeight*turns*1.4;
+      const distance=innerHeight*turns*.7;
       section.style.height=reducedMotion.matches?'auto':(stage.offsetHeight+distance)+'px';
       sectionTop=section.getBoundingClientRect().top+scrollY-headerHeight;
       scrollDistance=distance;
@@ -116,7 +116,7 @@
     const title=document.createElement('h3');title.textContent='A fresh cut with Vaughn.';const text=document.createElement('p');text.textContent='Choose a real available time on the VZ Clips booking page. Your appointment is confirmed there.';
     const details=document.createElement('div');details.className='booking-details';const service=document.createElement('span');service.textContent='Men’s haircut · 60 min';const price=document.createElement('strong');price.textContent='$35';details.append(service,price);
     const link=document.createElement('a');link.className='button';link.href=config.setmoreUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='See available times on Setmore';content.append(title,text,details,link);
-  }const fallback=document.createElement('a');fallback.href=calendly?calendly.href:config.setmoreUrl;fallback.className='booking-fallback';fallback.target='_blank';fallback.rel='noopener noreferrer';fallback.textContent=calendly?'Open Calendly in a new tab':'Open the full booking page';content.append(fallback);openDialog(bookingDialog);}
+  }openDialog(bookingDialog);}
   document.querySelectorAll('[data-book]').forEach(b=>b.addEventListener('click',openBooking));$('#year').textContent=new Date().getFullYear();
   // Word masks animate the visuals while headings retain accessible names.
   document.querySelectorAll('main h1,main h2').forEach(heading=>{heading.setAttribute('aria-label',heading.innerText.replace(/\s+/g,' ').trim());let i=0;function split(node){[...node.childNodes].forEach(child=>{if(child.nodeType===Node.TEXT_NODE){const f=document.createDocumentFragment();child.textContent.split(/(\s+)/).forEach(word=>{if(!word.trim()){f.append(document.createTextNode(word));return;}const mask=document.createElement('span');mask.className='word-mask';mask.setAttribute('aria-hidden','true');const rise=document.createElement('span');rise.className='word-rise';rise.style.setProperty('--word-delay',`${Math.min(i++*38,340)}ms`);rise.textContent=word;mask.append(rise);f.append(mask);});child.replaceWith(f);}else if(child.nodeType===Node.ELEMENT_NODE)split(child);});}split(heading);heading.classList.add('heading-motion');});
@@ -124,7 +124,22 @@
   reducedMotion.addEventListener('change',()=>{if(reducedMotion.matches)document.body.classList.remove('motion-ready');});
   let scrollQueued=false;window.addEventListener('scroll',()=>{if(scrollQueued||reducedMotion.matches)return;scrollQueued=true;requestAnimationFrame(()=>{if(scrollY<innerHeight*1.5)$('.hero-image>img').style.transform=`scale(${1.03+Math.min(scrollY/innerHeight,.8)*.07})`;scrollQueued=false;});},{passive:true});
   const finePointer=matchMedia('(hover:hover) and (pointer:fine) and (min-width:701px)'),cursor=$('.custom-cursor');let cursorFrame=0,x=0,y=0,cx=0,cy=0;
-  function drawCursor(){cx+=(x-cx)*.19;cy+=(y-cy)*.19;cursor.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`;if(Math.abs(x-cx)+Math.abs(y-cy)>.05)cursorFrame=requestAnimationFrame(drawCursor);else cursorFrame=0;}
+  let cursorAngle=0,cursorTime=0;
+  function drawCursor(time){
+    const dt=cursorTime?Math.min((time-cursorTime)/1000,.05):1/60;cursorTime=time;
+    const dx=x-cx,dy=y-cy,distance=Math.hypot(dx,dy),ease=1-Math.exp(-dt*15);
+    cx+=dx*ease;cy+=dy*ease;
+    if(distance>.5){
+      const target=Math.atan2(dy,dx),delta=Math.atan2(Math.sin(target-cursorAngle),Math.cos(target-cursorAngle));
+      cursorAngle+=delta*(1-Math.exp(-dt*12));
+    }
+    const stretch=Math.min(distance/150,.26);
+    cursor.style.setProperty('--cursor-angle',cursorAngle+'rad');
+    cursor.style.setProperty('--cursor-stretch-x',String(1+stretch));
+    cursor.style.setProperty('--cursor-stretch-y',String(1-stretch*.55));
+    cursor.style.transform=`translate3d(${cx}px,${cy}px,0) translate(-50%,-50%)`;
+    if(distance>.05)cursorFrame=requestAnimationFrame(drawCursor);else{cursorFrame=0;cursorTime=0;}
+  }
   window.addEventListener('pointermove',e=>{if(!finePointer.matches||reducedMotion.matches||e.pointerType==='touch')return;x=e.clientX;y=e.clientY;if(!document.body.classList.contains('cursor-ready')){cx=x;cy=y;document.body.classList.add('cursor-ready');}cursor.classList.add('shown');if(!cursorFrame)cursorFrame=requestAnimationFrame(drawCursor);const control=e.target.closest('button,a,summary,[data-cursor]');cursor.classList.toggle('expanded',!!control);cursor.querySelector('span').textContent=control?.dataset.cursor||'';},{passive:true});
   document.addEventListener('pointerleave',()=>cursor.classList.remove('shown'));document.addEventListener('focusin',()=>cursor.classList.remove('shown'));
   const resetCursor=()=>{if(!finePointer.matches||reducedMotion.matches){document.body.classList.remove('cursor-ready');cursor.classList.remove('shown');cancelAnimationFrame(cursorFrame);cursorFrame=0;}};finePointer.addEventListener('change',resetCursor);reducedMotion.addEventListener('change',resetCursor);
