@@ -6,11 +6,11 @@
   const mediaContent=$('#media-content'),mediaFooter=$('#media-footer'),focusOrigins=new WeakMap();
   const safeCalendly=value=>{try{const u=new URL(value);return u.protocol==='https:'&&u.hostname==='calendly.com'&&u.pathname!=='/'?u:null;}catch{return null;}};
   const calendly=safeCalendly(config.calendlyUrl);
-  function openDialog(dialog){focusOrigins.set(dialog,document.activeElement);dialog.showModal();document.body.style.overflow='hidden';}
+  function openDialog(dialog){focusOrigins.set(dialog,document.activeElement);dialog.showModal();dialog.append(document.querySelector('.custom-cursor'));document.body.style.overflow='hidden';}
   document.querySelectorAll('dialog').forEach(dialog=>{
     dialog.querySelector('.close-dialog').addEventListener('click',()=>dialog.close());
     dialog.addEventListener('click',e=>{if(e.target!==dialog)return;const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();});
-    dialog.addEventListener('close',()=>{document.body.style.overflow=document.querySelector('dialog[open]')?'hidden':'';if(dialog===mediaDialog){mediaContent.replaceChildren();mediaFooter.replaceChildren();}if(dialog===bookingDialog)$('#booking-content').replaceChildren();focusOrigins.get(dialog)?.focus({preventScroll:true});});
+    dialog.addEventListener('close',()=>{(document.querySelector('dialog[open]')||document.body).append(document.querySelector('.custom-cursor'));document.body.style.overflow=document.querySelector('dialog[open]')?'hidden':'';if(dialog===mediaDialog){mediaContent.replaceChildren();mediaFooter.replaceChildren();}if(dialog===bookingDialog)$('#booking-content').replaceChildren();focusOrigins.get(dialog)?.focus({preventScroll:true});});
   });
   function originalLink(id,text){const a=document.createElement('a');a.href=`https://www.instagram.com/p/${encodeURIComponent(id)}/`;a.target='_blank';a.rel='noopener noreferrer';a.textContent=text;return a;}
   function openReel(reel){
@@ -33,12 +33,34 @@
     let angle=0,width=surface.clientWidth,height=surface.clientHeight,visible=false,frame=0,lastTime=0;
     let dragging=false,pointerId=null,lastX=0,lastPointerTime=0,velocity=0,scrollBoost=0,lastScroll=scrollY;
     const step=Math.PI*2/cards.length;
+    const section=surface.closest('section'),stage=section.querySelector('.scroll-stage'),turns=Number(stage.dataset.scrollTurns);
+    let scrollAngle=0,sectionTop=0,scrollDistance=1;
+    function measureScroll(){
+      const headerHeight=$('.header').offsetHeight;
+      const distance=innerHeight*turns*2;
+      section.style.height=reducedMotion.matches?'auto':(stage.offsetHeight+distance)+'px';
+      sectionTop=section.getBoundingClientRect().top+scrollY-headerHeight;
+      scrollDistance=distance;
+      updateScroll();
+    }
+    function updateScroll(){
+      const progress=reducedMotion.matches?0:Math.max(0,Math.min(1,(scrollY-sectionTop)/scrollDistance));
+      scrollAngle=progress*turns*Math.PI*2;
+      render();
+    }
+    window.addEventListener('resize',measureScroll);
+    reducedMotion.addEventListener('change',measureScroll);
+    requestAnimationFrame(measureScroll);
+    document.fonts?.ready.then(measureScroll);
+    window.addEventListener('load',measureScroll,{once:true});
     function render(){cards.forEach((card,index)=>{
-      const phase=angle+index*step+Math.PI/2,depth=(Math.sin(phase)+1)/2;
-      const x=Math.cos(phase)*width*.35,y=Math.sin(phase)*height*(review?.28:.29);
-      const scale=review?.7+depth*.3:.55+depth*.45,tilt=Math.cos(phase)*(review?12:18);
+      const phase=angle+scrollAngle+index*step+Math.PI/2,front=Math.sin(phase),depth=(front+1)/2;
+      if(review){card.style.visibility=front>0?'visible':'hidden';}
+      surface.dataset.scrollTurns=String(scrollAngle/(Math.PI*2));
+      const x=Math.cos(phase)*(review?Math.max(width*.9,700):width*.35),y=review?(1-front)*height*.6-height*.12:Math.sin(phase)*height*.29;
+      const scale=review?.9+front*.1:.55+depth*.45,tilt=Math.cos(phase)*(review?9:18);
       card.style.transform=`translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(${scale})`;
-      card.style.opacity=String(review?.25+depth*.75:.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
+      card.style.opacity=String(review?Math.min(1,Math.max(0,front*5)):.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
     });}
     function animate(time){
       frame=0;const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;
@@ -47,7 +69,7 @@
     }
     function start(){if(!frame&&visible&&!document.hidden&&!reducedMotion.matches){lastTime=0;frame=requestAnimationFrame(animate);}}
     function stop(){cancelAnimationFrame(frame);frame=0;lastTime=0;}
-    if(!review)window.addEventListener('scroll',()=>{const distance=Math.abs(scrollY-lastScroll);lastScroll=scrollY;if(visible&&!reducedMotion.matches){scrollBoost=Math.min(3,scrollBoost+distance*.006);start();}},{passive:true});
+    window.addEventListener('scroll',()=>{const distance=Math.abs(scrollY-lastScroll);lastScroll=scrollY;updateScroll();if(visible&&!reducedMotion.matches){scrollBoost=Math.min(3,scrollBoost+distance*.006);start();}},{passive:true});
     {
       surface.addEventListener('pointerdown',e=>{if(e.button!==0||pointerId!==null)return;pointerId=e.pointerId;dragging=true;lastX=e.clientX;lastPointerTime=e.timeStamp;velocity=0;surface.setPointerCapture(e.pointerId);surface.classList.add('dragging');});
       surface.addEventListener('pointermove',e=>{if(e.pointerId!==pointerId)return;const dx=e.clientX-lastX,seconds=Math.max((e.timeStamp-lastPointerTime)/1000,.008);angle+=dx*.008;velocity=Math.max(-5,Math.min(5,dx*.008/seconds));lastX=e.clientX;lastPointerTime=e.timeStamp;render();});
@@ -61,7 +83,8 @@
     reducedMotion.addEventListener('change',()=>{velocity=scrollBoost=0;reducedMotion.matches?stop():start();render();});render();
   }
   makeWheel({surface:$('#cut-orbit'),cards:photoCards});
-  const reviewCards=config.reviews.map(review=>{const f=document.createElement('figure');f.className='review-card';const stars=document.createElement('div');stars.className='stars';stars.textContent='★★★★★';stars.setAttribute('aria-label','5 out of 5 stars');const q=document.createElement('blockquote');q.textContent=`“${review.quote}”`;const c=document.createElement('figcaption');c.textContent=review.name;f.append(stars,q,c);$('#review-ring').append(f);return f;});
+  // Repeat the supplied reactions around the long wheel; do not invent customers.
+  const reviewCards=Array.from({length:3},()=>config.reviews).flat().map((review,index)=>{const f=document.createElement('figure');f.className='review-card';if(index>=config.reviews.length)f.setAttribute('aria-hidden','true');const stars=document.createElement('div');stars.className='stars';stars.textContent='★★★★★';stars.setAttribute('aria-label','5 out of 5 stars');const q=document.createElement('blockquote');q.textContent=`“${review.quote}”`;const c=document.createElement('figcaption');c.textContent=review.name;f.append(stars,q,c);$('#review-ring').append(f);return f;});
   makeWheel({surface:$('#review-wheel'),cards:reviewCards,review:true});
   function makeCalendar(title){const url=new URL(calendly);url.searchParams.set('embed_type','Inline');url.searchParams.set('embed_domain',location.hostname);url.searchParams.set('hide_gdpr_banner','0');url.searchParams.set('primary_color','4a5b31');const iframe=document.createElement('iframe');iframe.title=title;iframe.src=url.href;iframe.loading='lazy';iframe.referrerPolicy='strict-origin-when-cross-origin';return iframe;}
   if(calendly){const inline=$('#calendar-inline'),load=document.createElement('button');load.className='button';load.textContent='View available times here';load.addEventListener('click',()=>inline.replaceChildren(makeCalendar('Book a VZ Clips haircut with Calendly')));inline.append(load);}

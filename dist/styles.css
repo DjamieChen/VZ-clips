@@ -25,3 +25,35 @@
 /* Continuous motion, with direct dragging only on the review wheel. */
 .orbit-card{margin:0;pointer-events:none}.cut-orbit{cursor:default;touch-action:pan-y}.orbit-card:hover{border-color:#ffffff30}.review-wheel{cursor:grab;touch-action:pan-y;user-select:none}.review-wheel.dragging{cursor:grabbing}.reviews>.review-note{display:block;text-align:center;margin-top:12px;font-size:.875rem;letter-spacing:0}.hero-image-label{justify-content:flex-start}
 .wordmark span{color:#fff}.cut-orbit{cursor:grab}.cut-orbit.dragging{cursor:grabbing}
+
+/* Scroll chapters: native sticky sections, two haircut turns and one review turn. */
+:root{--header-height:88px}
+.section.work,.section.reviews{padding:0;overflow:clip;position:relative}
+.scroll-stage{position:sticky;top:var(--header-height);height:calc(100svh - var(--header-height));padding:38px 7% 22px;display:flex;flex-direction:column;overflow:hidden}
+.scroll-stage>.section-heading{flex-shrink:0;margin-bottom:0}
+.scroll-stage .section-heading h2{font-size:clamp(2.5rem,4.4vw,4.7rem)}
+.scroll-stage .section-heading .eyebrow{margin-bottom:12px}
+.scroll-stage .cut-orbit,.scroll-stage .review-wheel{height:auto;min-height:0;flex:1;flex-shrink:1;width:100%;margin:0;overflow:hidden}
+.reviews .scroll-stage{padding-inline:0}
+.reviews .section-heading{padding-inline:7%}
+.reviews .review-note{text-align:center;flex-shrink:0;margin:0;font-size:.875rem;letter-spacing:0}
+.review-orbit-line{display:none}
+.review-card{width:clamp(240px,26vw,330px);min-height:180px;pointer-events:none}
+.hero h1{font-size:clamp(3rem,5.4vw,6.4rem)}
+.hero h1 .serif{white-space:normal}
+/* Two matching groups fill the moving strip without an empty seam. */
+.ticker{padding:21px 0}
+.ticker>.ticker-track{display:flex;gap:0;animation:marquee 60s linear infinite}
+.ticker-group{display:flex;align-items:center;flex-shrink:0;width:max-content;white-space:nowrap}
+.ticker .ticker-phrase{margin:0;color:#d3d3ce}
+.ticker .ticker-star{margin:0 45px;color:var(--accent)}
+/* Move this cursor into open dialogs so it shares the browser's top layer. */
+.custom-cursor{width:24px;height:28px;background:transparent;border:0;border-radius:0;overflow:visible;z-index:2147483647}
+.custom-cursor:before{content:'';position:absolute;inset:0;background:var(--accent);clip-path:polygon(7% 0,100% 76%,55% 74%,28% 100%);transition:clip-path .25s,border-radius .3s}
+.custom-cursor.expanded{width:76px;height:76px;border:0;background:transparent}
+.custom-cursor.expanded:before{clip-path:circle(50%);border-radius:50%}
+.custom-cursor span{position:relative;z-index:1}
+.cursor-ready .cut-orbit,.cursor-ready .review-wheel,.cursor-ready dialog,.cursor-ready dialog *{cursor:none}
+@media(max-width:700px){:root{--header-height:72px}.scroll-stage{padding:26px 6% 20px}.reviews .section-heading{padding-inline:6%}.scroll-stage .section-heading h2{font-size:2.5rem}.scroll-stage .section-heading>p{margin-top:12px;font-size:.875rem}.scroll-stage .section-heading{margin-bottom:8px}.hero h1{font-size:clamp(2.8rem,10vw,4.5rem)}.ticker .ticker-star{margin-inline:26px}.review-card{width:240px;min-height:170px}.orbit-card{width:135px}}
+@media(max-width:700px){.scroll-stage{padding-bottom:90px}}
+@media(prefers-reduced-motion:reduce){.scroll-stage{position:relative;top:auto;height:auto;min-height:0}.scroll-stage .cut-orbit{flex:none;height:570px}.scroll-stage .review-wheel{flex:none;height:400px}}
