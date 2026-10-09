@@ -33,11 +33,12 @@
     let angle=0,width=surface.clientWidth,height=surface.clientHeight,visible=false,frame=0,lastTime=0;
     let dragging=false,pointerId=null,lastX=0,lastPointerTime=0,velocity=0,scrollBoost=0,lastScroll=scrollY;
     const step=Math.PI*2/cards.length;
-    const section=surface.closest('section'),stage=section.querySelector('.scroll-stage'),turns=Number(stage.dataset.scrollTurns);
+    const section=surface.closest('section'),stage=section.querySelector('.scroll-stage'),turns=Number(stage?.dataset.scrollTurns||0);
     let scrollAngle=0,sectionTop=0,scrollDistance=1;
     function measureScroll(){
       const headerHeight=$('.header').offsetHeight;
-      const distance=innerHeight*turns*2;
+      if(!stage)return;
+      const distance=innerHeight*turns*1.4;
       section.style.height=reducedMotion.matches?'auto':(stage.offsetHeight+distance)+'px';
       sectionTop=section.getBoundingClientRect().top+scrollY-headerHeight;
       scrollDistance=distance;
@@ -53,14 +54,37 @@
     requestAnimationFrame(measureScroll);
     document.fonts?.ready.then(measureScroll);
     window.addEventListener('load',measureScroll,{once:true});
-    function render(){cards.forEach((card,index)=>{
+    let lastReviewTurn=0,reviewOrder=[...config.reviews];
+    function refreshReviewOrder(){
+      const turn=Math.floor(angle/(Math.PI*2));
+      if(!review||turn===lastReviewTurn)return;
+      lastReviewTurn=turn;
+      let next;
+      for(let attempt=0;attempt<12;attempt++){
+        next=[...reviewOrder];
+        for(let i=next.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[next[i],next[j]]=[next[j],next[i]];}
+        if(next.every((r,i)=>r!==reviewOrder[i]))break;
+      }
+      if(next.some((r,i)=>r===reviewOrder[i]))next=reviewOrder.slice(1).concat(reviewOrder[0]);
+      reviewOrder=next;
+      cards.forEach((card,index)=>card.nextReview=next[index]);
+      surface.dataset.reviewRound=String(turn);
+    }
+    function render(){refreshReviewOrder();cards.forEach((card,index)=>{
       const phase=angle+scrollAngle+index*step+Math.PI/2,front=Math.sin(phase),depth=(front+1)/2;
-      if(review){card.style.visibility=front>0?'visible':'hidden';}
+      if(review){
+        card.style.visibility='visible';
+        if(card.nextReview&&front<-.75){
+          card.querySelector('blockquote').textContent='“'+card.nextReview.quote+'”';
+          card.querySelector('figcaption').textContent=card.nextReview.name;
+          card.nextReview=null;
+        }
+      }
       surface.dataset.scrollTurns=String(scrollAngle/(Math.PI*2));
-      const x=Math.cos(phase)*(review?Math.max(width*.9,700):width*.35),y=review?(1-front)*height*.6-height*.12:Math.sin(phase)*height*.29;
-      const scale=review?.9+front*.1:.55+depth*.45,tilt=Math.cos(phase)*(review?9:18);
+      const x=Math.cos(phase)*width*.35,y=Math.sin(phase)*height*(review?.28:.29);
+      const scale=review?.7+depth*.3:.55+depth*.45,tilt=Math.cos(phase)*(review?12:18);
       card.style.transform=`translate(-50%,-50%) translate3d(${x}px,${y}px,0) rotate(${tilt}deg) scale(${scale})`;
-      card.style.opacity=String(review?Math.min(1,Math.max(0,front*5)):.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
+      card.style.opacity=String(review?.25+depth*.75:.45+depth*.55);card.style.zIndex=String(Math.round(depth*100));
     });}
     function animate(time){
       frame=0;const dt=lastTime?Math.min((time-lastTime)/1000,.05):0;lastTime=time;
@@ -83,8 +107,8 @@
     reducedMotion.addEventListener('change',()=>{velocity=scrollBoost=0;reducedMotion.matches?stop():start();render();});render();
   }
   makeWheel({surface:$('#cut-orbit'),cards:photoCards});
-  // Repeat the supplied reactions around the long wheel; do not invent customers.
-  const reviewCards=Array.from({length:3},()=>config.reviews).flat().map((review,index)=>{const f=document.createElement('figure');f.className='review-card';if(index>=config.reviews.length)f.setAttribute('aria-hidden','true');const stars=document.createElement('div');stars.className='stars';stars.textContent='★★★★★';stars.setAttribute('aria-label','5 out of 5 stars');const q=document.createElement('blockquote');q.textContent=`“${review.quote}”`;const c=document.createElement('figcaption');c.textContent=review.name;f.append(stars,q,c);$('#review-ring').append(f);return f;});
+  // Use only the supplied reactions, with a fresh order on each full revolution.
+  const reviewCards=config.reviews.map(review=>{const f=document.createElement('figure');f.className='review-card';const stars=document.createElement('div');stars.className='stars';stars.textContent='★★★★★';stars.setAttribute('aria-label','5 out of 5 stars');const q=document.createElement('blockquote');q.textContent=`“${review.quote}”`;const c=document.createElement('figcaption');c.textContent=review.name;f.append(stars,q,c);$('#review-ring').append(f);return f;});
   makeWheel({surface:$('#review-wheel'),cards:reviewCards,review:true});
   function makeCalendar(title){const url=new URL(calendly);url.searchParams.set('embed_type','Inline');url.searchParams.set('embed_domain',location.hostname);url.searchParams.set('hide_gdpr_banner','0');url.searchParams.set('primary_color','4a5b31');const iframe=document.createElement('iframe');iframe.title=title;iframe.src=url.href;iframe.loading='lazy';iframe.referrerPolicy='strict-origin-when-cross-origin';return iframe;}
   if(calendly){const inline=$('#calendar-inline'),load=document.createElement('button');load.className='button';load.textContent='View available times here';load.addEventListener('click',()=>inline.replaceChildren(makeCalendar('Book a VZ Clips haircut with Calendly')));inline.append(load);}

@@ -57,3 +57,13 @@
 @media(max-width:700px){:root{--header-height:72px}.scroll-stage{padding:26px 6% 20px}.reviews .section-heading{padding-inline:6%}.scroll-stage .section-heading h2{font-size:2.5rem}.scroll-stage .section-heading>p{margin-top:12px;font-size:.875rem}.scroll-stage .section-heading{margin-bottom:8px}.hero h1{font-size:clamp(2.8rem,10vw,4.5rem)}.ticker .ticker-star{margin-inline:26px}.review-card{width:240px;min-height:170px}.orbit-card{width:135px}}
 @media(max-width:700px){.scroll-stage{padding-bottom:90px}}
 @media(prefers-reduced-motion:reduce){.scroll-stage{position:relative;top:auto;height:auto;min-height:0}.scroll-stage .cut-orbit{flex:none;height:570px}.scroll-stage .review-wheel{flex:none;height:400px}}
+
+/* Reviews return to a normal flowing section and the original full circle. */
+.section.reviews{padding:90px 7% 65px;overflow:hidden}
+.reviews .section-heading{padding:0;margin-bottom:0}
+.reviews .review-wheel{height:550px;overflow:hidden}
+.reviews .review-orbit-line{display:block}
+.reviews .review-card{width:clamp(240px,27vw,350px);min-height:200px}
+.reviews>.review-note{margin-top:12px}
+@media(max-width:1000px){.section.reviews{padding:80px 5% 60px}.reviews .review-wheel{height:510px}.reviews .review-card{width:280px}}
+@media(max-width:700px){.section.reviews{padding:65px 6% 50px}.reviews .review-wheel{height:530px;margin-inline:-6.4%;width:112.8%}.reviews .review-card{width:240px;min-height:170px}}
