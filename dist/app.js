@@ -115,7 +115,7 @@
   if(calendly){const inline=$('#calendar-inline'),load=document.createElement('button');load.className='button';load.textContent='View available times here';load.addEventListener('click',()=>inline.replaceChildren(makeCalendar('Book a VZ Clips haircut with Calendly')));inline.append(load);}
   function openBooking(){const content=$('#booking-content');content.replaceChildren();if(calendly)content.append(makeCalendar('Choose your VZ Clips appointment on Calendly'));else{
     const title=document.createElement('h3');title.textContent='A fresh cut with Vaughn.';const text=document.createElement('p');text.textContent='Choose a real available time on the VZ Clips booking page. Your appointment is confirmed there.';
-    const details=document.createElement('div');details.className='booking-details';const service=document.createElement('span');service.textContent='Men’s haircut · 60 min';const price=document.createElement('strong');price.textContent='$35';details.append(service,price);
+    const details=document.createElement('div');details.className='booking-details';const service=document.createElement('span');service.textContent='Men’s haircut · 60 min';const price=document.createElement('strong');price.textContent='$25';details.append(service,price);
     const link=document.createElement('a');link.className='button';link.href=config.setmoreUrl;link.target='_blank';link.rel='noopener noreferrer';link.textContent='See available times on Setmore';content.append(title,text,details,link);
   }openDialog(bookingDialog);}
   document.querySelectorAll('[data-book]').forEach(b=>b.addEventListener('click',openBooking));$('#year').textContent=new Date().getFullYear();
